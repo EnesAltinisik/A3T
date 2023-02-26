@@ -11,7 +11,8 @@ from torch.autograd import Variable
 
 from wideresnet import *
 from resnet import *
-from mart import mart_loss
+from adv_loss import mart_loss
+from adv_loss import a3t_loss
 import numpy as np
 import time
 
@@ -20,6 +21,8 @@ os.environ["CUDA_VISIBLE_DEVICES"]="0"
 parser = argparse.ArgumentParser(description='PyTorch CIFAR MART Defense')
 parser.add_argument('--batch-size', type=int, default=128, metavar='N',
                     help='input batch size for training (default: 128)')
+parser.add_argument('--adv-type', type=str, default='A3T',
+                    help='Adversarial attack type, default value A3T')
 parser.add_argument('--test-batch-size', type=int, default=100, metavar='N',
                     help='input batch size for testing (default: 100)')
 parser.add_argument('--epochs', type=int, default=90, metavar='N',
@@ -89,14 +92,11 @@ def train(args, model, device, train_loader, optimizer, epoch):
         optimizer.zero_grad()
 
         # calculate robust loss
-        loss = mart_loss(model=model,
-                           x_natural=data,
-                           y=target,
-                           optimizer=optimizer,
-                           step_size=args.step_size,
-                           epsilon=args.epsilon,
-                           perturb_steps=args.num_steps,
-                           beta=args.beta)
+        if args.adv_type == 'MART':
+            loss = mart_loss(model,data,target,optimizer,args)
+        else:
+            loss = a3t_loss(model,data,target,optimizer,args)
+            
         loss.backward()
         optimizer.step()
 

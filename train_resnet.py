@@ -11,7 +11,8 @@ from torch.autograd import Variable
 
 from wideresnet import *
 from resnet import *
-from mart import mart_loss
+from adv_loss import mart_loss
+from adv_loss import a3t_loss
 import numpy as np
 import time
 
@@ -87,16 +88,12 @@ def train(args, model, device, train_loader, optimizer, epoch):
         data, target = data.to(device), target.to(device)
 
         optimizer.zero_grad()
-
+        
         # calculate robust loss
-        loss = mart_loss(model=model,
-                           x_natural=data,
-                           y=target,
-                           optimizer=optimizer,
-                           step_size=args.step_size,
-                           epsilon=args.epsilon,
-                           perturb_steps=args.num_steps,
-                           beta=args.beta)
+        if args.adv_type == 'MART':
+            loss = mart_loss(model,data,target,optimizer,args)
+        else:
+            loss = a3t_loss(model,data,target,optimizer,args)
         loss.backward()
         optimizer.step()
 

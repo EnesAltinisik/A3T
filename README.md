@@ -1,35 +1,34 @@
-# MART
-Code for ICLR2020 "Improving Adversarial Robustness Requires Revisiting Misclassified Examples"
-
+# A3T
+Code for ECML-PKDD 2023 "A3T: Accuracy Aware Adversarial Training"
 
 ## Usage
-python3 train_resnet.py for ResNet18
+### CIFAR-10
 
-python3 train_wideresnet.py for WideResNet
+```
+python train_resnet.py # to test with ResNet18
+```
+```
+python train_wideresnet.py # to test with WideResNet
+```
 
-## Trained Models
-The ResNet18 trained by MART on CIFAR-10: https://drive.google.com/file/d/1YAKnAhUAiv8UFHnZfj2OIHWHpw_HU0Ig/view?usp=sharing
+### GLUE 
 
-The WideResNet-34-10 trained by MART on CIFAR-10: https://drive.google.com/open?id=1QjEwSskuq7yq86kRKNv6tkn9I16cEBjc
-
-MART WideResNet-28-10 model on 500K unlabeled data: https://drive.google.com/file/d/11pFwGmLfbLHB4EvccFcyHKvGb3fBy_VY/view?usp=sharing
+```
+python glue.py $dataset $adv_method
+```
+- The dataset parameter can take a value of one of the GLUE datasets. 
+- The adv_method parameter must be one of the "clean", "AT", and "A3T" as an adversarial attack method.
+Each dataset should first run with a 'clean' argument, then one of 'AT' or 'A3T' can be used.
 
 ## Citing this work
 If you use this code in your work, please cite the accompanying paper:
 
 ```
-@inproceedings{Wang2020Improving,
-    title={Improving Adversarial Robustness Requires Revisiting Misclassified Examples},
-    author={Yisen Wang and Difan Zou and Jinfeng Yi and James Bailey and Xingjun Ma and Quanquan Gu},
-    booktitle={ICLR},
-    year={2020}
+@article{altinisik2022a3t,
+  title={A3T: Accuracy Aware Adversarial Training},
+  author={Altinisik, Enes and Messaoud, Safa and Sencar, Husrev Taha and Chawla, Sanjay},
+  journal={arXiv preprint arXiv:2211.16316},
+  year={2022}
 }
 ```
-
-## Requirements
-- Python 3.7.4 
-- Pytorch 1.3.1
-- Part of the code is based on the following repo:
-  - Dynamic: https://github.com/YisenWang/dynamic_adv_training
-  - TREADES: https://github.com/yaodongyu/TRADES
-  - RST: https://github.com/yaircarmon/semisup-adv
+The vision part of the code is forked from the repository of YisenWang/MART.
